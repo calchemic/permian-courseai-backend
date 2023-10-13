@@ -1,0 +1,26 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 18
+    commands:
+      - echo Entered the install phase...
+      - curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+      - echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+      - sudo apt update -y
+      - sudo apt install yarn -y
+      - sudo apt install --no-install-recommends yarn
+      - yarn set version stable
+      - yarn plugin import @yarnpkg/plugin-workspace-tools
+  pre_build:
+    commands:
+      - echo Installing source NPM dependencies...
+      - yarn install
+  build:
+    commands:
+      - echo Build started...
+      - yarn build
+artifacts:
+  files:
+    - '**/*'

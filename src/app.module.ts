@@ -7,6 +7,7 @@ import { CommonModule } from './common/common.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypegooseModule } from 'nestjs-typegoose';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { VideoModule } from './video/video.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     UserModule,
     AuthModule,
     CommonModule,
+    VideoModule,
   ],
   controllers: [AppController],
   providers: [AppService],

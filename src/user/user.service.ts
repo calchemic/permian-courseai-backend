@@ -1,4 +1,4 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { BadRequestException, Injectable, OnModuleInit } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { BaseService } from '../base/base.service';
@@ -6,6 +6,7 @@ import { Role, User } from '../model/user.model';
 import { InjectModel } from 'nestjs-typegoose';
 import { ReturnModelType } from '@typegoose/typegoose';
 import { Generator } from '../common/generator.service';
+import { GetUserDto } from './dto/get-user.dto';
 
 @Injectable()
 export class UserService extends BaseService<User> implements OnModuleInit {
@@ -18,6 +19,16 @@ export class UserService extends BaseService<User> implements OnModuleInit {
   }
   create(createUserDto: CreateUserDto) {
     return 'This action adds a new user';
+  }
+
+  public async getUser(getUserDto: GetUserDto): Promise<Partial<User>> {
+    const foundUser = await this.userModel.findById(getUserDto.id);
+
+    if (!foundUser) {
+      throw new BadRequestException('Invalid user');
+    }
+
+    return foundUser;
   }
 
   findAll() {

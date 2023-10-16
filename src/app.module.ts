@@ -8,6 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypegooseModule } from 'nestjs-typegoose';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { VideoModule } from './video/video.module';
+import { VoiceModule } from './voice/voice.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { VideoModule } from './video/video.module';
     AuthModule,
     CommonModule,
     VideoModule,
+    VoiceModule,
   ],
   controllers: [AppController],
   providers: [AppService],

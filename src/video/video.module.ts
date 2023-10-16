@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
 import { VideoService } from './video.service';
 import { VideoController } from './video.controller';
-import { AuthModule } from 'src/auth/auth.module';
+import { AuthModule } from '../auth/auth.module';
+import { Video } from '../model/video.model';
+import { TypegooseModule } from 'nestjs-typegoose';
 
 @Module({
-  imports: [AuthModule],
+  imports: [AuthModule, TypegooseModule.forFeature([Video])],
   controllers: [VideoController],
   providers: [VideoService],
 })

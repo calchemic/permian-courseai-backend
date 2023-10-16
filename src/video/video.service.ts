@@ -2,11 +2,24 @@ import { Injectable } from '@nestjs/common';
 import { CreateVideoDto } from './dto/create-video.dto';
 import { UpdateVideoDto } from './dto/update-video.dto';
 import { User } from '../model/user.model';
+import { Video } from '../model/video.model';
+import { BaseService } from '../base/base.service';
+import { InjectModel } from 'nestjs-typegoose';
+import { Ref, ReturnModelType } from '@typegoose/typegoose';
 
 @Injectable()
-export class VideoService {
+export class VideoService extends BaseService<Video> {
+  constructor(
+    @InjectModel(Video)
+    private readonly videoModel: ReturnModelType<typeof Video>,
+  ) {
+    super(videoModel);
+  }
+
   create(createVideoDto: CreateVideoDto, user: Partial<User>) {
-    console.log(createVideoDto);
+    const toBeCreated: Partial<Video> = { ...createVideoDto };
+    toBeCreated.user = user._id as unknown as Ref<User>;
+    return this.model.create(toBeCreated);
 
     return 'This action adds a new video';
   }

@@ -28,11 +28,11 @@ export class VoiceService {
   }
 
   async create(createVoiceDto: CreateVoiceDto) {
-    // let message =
-    //   'Use your knowledge to answer the student question.Your answer should be formatted as json with a heading, followed by an string array of points. Structure your answer in points and restrict to a maximum of five points.  \n\n';
-
     let message =
-      'A student has asked you the following question. Please answer it to the best of your knowledge.  \n\n';
+      'Use your knowledge to answer the student question.Your answer should be formatted as json with a heading, followed by an string array of points. Structure your answer in points and restrict to a maximum of five points.  \n\n';
+
+    // let message =
+    //   'A student has asked you the following question. Please answer it to the best of your knowledge.  \n\n';
 
     message += `Question: ${createVoiceDto.content}`;
     const payloadObj = {
@@ -50,13 +50,15 @@ export class VoiceService {
         return null;
       });
 
-    return data;
+    // return data;
 
     // console.log(data);
 
-    // const formattedData = JSON.parse(data);
-    // console.log(formattedData);
-    // const aiPoints = formattedData.points;
+    const formattedData = JSON.parse(data);
+    console.log(formattedData);
+    const aiPoints = formattedData.points;
+
+    return aiPoints;
 
     // const dataAsString = aiPoints.join(' ');
 

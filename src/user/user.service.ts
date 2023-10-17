@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable, OnModuleInit } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+  OnModuleInit,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { BaseService } from '../base/base.service';
@@ -36,6 +41,7 @@ export class UserService extends BaseService<User> implements OnModuleInit {
   }
 
   findOne(id: number) {
+    console.log(id);
     return `This action returns a #${id} user`;
   }
 
@@ -47,6 +53,18 @@ export class UserService extends BaseService<User> implements OnModuleInit {
     return `This action removes a #${id} user`;
   }
 
+  async getMe(user: Partial<User>) {
+    const foundUser = await this.userModel
+      .findById(user._id)
+      .select('-password');
+
+    if (!foundUser) {
+      throw new NotFoundException('User Not Found');
+    }
+
+    return foundUser;
+  }
+
   async onModuleInit() {
     await this.userModel.updateOne(
       { email: 'demo@permian.ai' },
@@ -55,6 +73,20 @@ export class UserService extends BaseService<User> implements OnModuleInit {
           email: 'demo@permian.ai',
           password:
             '$2a$12$Fp4szxcF7XCESkAfz2LWWeZ5x3KV7M0N8gbdz7CuWIgrejFcut5dC',
+          role: Role.Student,
+          firstName: 'Demo',
+          lastName: 'Permian',
+        },
+      },
+      { upsert: true },
+    );
+    await this.userModel.updateOne(
+      { email: 'customer_demo@permian.ai' },
+      {
+        $setOnInsert: {
+          email: 'customer_demo@permian.ai',
+          password:
+            '$2a$12$o.ry8.r0Kf4jZDhaJfsI8O9n9gDYV2VBzHqybemkIV/EkkZa1e55G',
           role: Role.Student,
           firstName: 'Demo',
           lastName: 'Permian',

@@ -14,6 +14,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { compareSync } from 'bcryptjs';
 import { JwtPayload } from './jwt.interface';
 import { Generator } from '../common/generator.service';
+import { NotificationEmails } from './auth.const';
 
 @Injectable()
 export class AuthService {
@@ -33,6 +34,11 @@ export class AuthService {
 
     if (!user) {
       throw new NotFoundException('User not found');
+    }
+
+    if (NotificationEmails.includes(user.email)) {
+      console.log(NotificationEmails);
+      this.eventEmitter.emit('user.login', { email: user.email });
     }
 
     const { password } = user;

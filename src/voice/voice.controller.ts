@@ -20,6 +20,11 @@ export class VoiceController {
     return this.voiceService.create(createVoiceDto);
   }
 
+  @Post('voice')
+  createVoice(@Body() createVoiceDto: CreateVoiceDto) {
+    return this.voiceService.createVoice(createVoiceDto);
+  }
+
   @Get()
   findAll() {
     return this.voiceService.findAll();

@@ -5,6 +5,18 @@ import axios from 'axios';
 
 @Injectable()
 export class VoiceService {
+  private get voiceClienttts() {
+    return axios.create({
+      baseURL: 'https://api.play.ht',
+      headers: {
+        'content-type': 'application/json', // Set the content type to application/json.
+        AUTHORIZATION: process.env.PLAY_HT_SECRET_KEY,
+        'X-USER-ID': process.env.PLAY_HT_USER_ID,
+        Accept: 'application/json',
+      },
+    });
+  }
+
   private get voiceClient() {
     return axios.create({
       baseURL: 'https://api.elevenlabs.io',
@@ -77,6 +89,28 @@ export class VoiceService {
     // console.log(speechDetails);
 
     // return { dataAsString, aiPoints };
+  }
+
+  async createVoice(createVoiceDto: CreateVoiceDto) {
+    const payloadObj = {
+      text: createVoiceDto.content,
+      voice: 'larry',
+      output_format: 'mulaw',
+      voice_engine: 'PlayHT2.0-turbo',
+      quality: 'draft',
+    };
+
+    const data = await this.voiceClienttts
+      .post('/api/v2/tts/stream', JSON.stringify(payloadObj))
+      .then((res) => {
+        console.log(res.data);
+        return res.data;
+      })
+      .catch((error) => {
+        console.log(error.response.data);
+        console.log('ERROR');
+        return null;
+      });
   }
 
   findAll() {
